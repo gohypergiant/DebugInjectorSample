@@ -17,17 +17,16 @@ android {
         checkReleaseBuilds false
     }
 
+    sourceSets {
+        debug {
+            java.srcDirs += ['src/debugInjector/java']
+            res.srcDirs += ['src/debugInjector/res']
+        }
+    }
+
     buildTypes {
         debug {
-            debuggable true
-
-            sourceSets {
-                main {
-                    java.srcDirs += ['src/debugInjector/java']
-                    res.srcDirs += ['src/debugInjector/res']
-                }
-            }
-
+            applicationIdSuffix ".debug"
         }
         release {
             minifyEnabled false

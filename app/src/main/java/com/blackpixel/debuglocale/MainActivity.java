@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUi() {
         helloWorldTextView.setText(R.string.hello_world);
-        dateTimeTextView.setText(DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.LONG).format(new Date()));
+        dateTimeTextView.setText(DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG)
+                .format(new Date()));
     }
 
     @Override

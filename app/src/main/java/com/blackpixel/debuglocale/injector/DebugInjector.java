@@ -24,8 +24,6 @@ package com.blackpixel.debuglocale.injector;
 import android.app.Activity;
 import android.content.Context;
 
-import java.lang.reflect.InvocationTargetException;
-
 public abstract class DebugInjector {
 
     private static DebugInjector sDebugInjector;
@@ -33,6 +31,14 @@ public abstract class DebugInjector {
     public static DebugInjector getInstance(Context context) {
 
         if (sDebugInjector == null) {
+
+/*
+             // DebugInjectorPattern #1
+             // use reflection to create DebugInjectorImpl
+             // pros:
+             //   one version of DebugInjectorImpl.java
+             //   easier to "lean on the compiler" when developing
+
             try {
                 sDebugInjector = (DebugInjector) Class.forName("com.blackpixel.debuglocale.injector.DebugInjectorImpl")
                         .getConstructor(Context.class).newInstance(context);
@@ -41,6 +47,14 @@ public abstract class DebugInjector {
                 // TODO: error handling
                 e.printStackTrace();
             }
+*/
+
+            // DebugInjectorPattern #2
+            // place no-op version of DebugInjectorImpl.java in release folder
+            // pros:
+            //   no reflection
+            //   more android-y
+            sDebugInjector = new DebugInjectorImpl(context);
 
         }
         return sDebugInjector;

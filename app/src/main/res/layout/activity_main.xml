@@ -35,11 +35,15 @@
     <TextView
         android:id="@+id/main_hello_world_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/main_date_time_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
 </LinearLayout>
