@@ -22,6 +22,7 @@
 package com.blackpixel.debuglocale;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,18 +84,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+        boolean handled;
+
         switch (item.getItemId()) {
             case R.id.setting_app:
-                // TODO: settings activity
-                return true;
+                // TODO: add settings activity
+                Snackbar bar = Snackbar.make(findViewById(android.R.id.content),
+                        getResources().getString(R.string.snackbar_build_type,
+                                    BuildConfig.DEBUG ? "Debug" : "Release" ),
+                        Snackbar.LENGTH_LONG);
+                bar.show();
+                handled = true;
+                break;
             case R.id.setting_debug:
                 if (BuildConfig.DEBUG) {
                     debugInjector.startSettingActivity(this);
                 }
-                return true;
+                handled = true;
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                handled = super.onOptionsItemSelected(item);
+                break;
         }
+
+        return handled;
     }
 }

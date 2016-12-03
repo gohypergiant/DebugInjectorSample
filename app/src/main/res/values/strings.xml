@@ -22,4 +22,5 @@
 <resources xmlns:app="http://schemas.android.com/apk/res-auto">
     <string name="app_name">DebugInjectorSample</string>
     <string name="hello_world">Hello World!</string>
+    <string name="snackbar_build_type">This is a %s build</string>
 </resources>

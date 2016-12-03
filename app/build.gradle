@@ -17,13 +17,6 @@ android {
         checkReleaseBuilds false
     }
 
-    sourceSets {
-        debug {
-            java.srcDirs += ['src/debugInjector/java']
-            res.srcDirs += ['src/debugInjector/res']
-        }
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -42,5 +35,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:support-v4:25.0.1'
+    compile 'com.android.support:design:25.0.1'
     testCompile 'junit:junit:4.12'
 }

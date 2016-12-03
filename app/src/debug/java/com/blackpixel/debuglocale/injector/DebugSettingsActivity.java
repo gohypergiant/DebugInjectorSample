@@ -57,10 +57,11 @@ public class DebugSettingsActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        String defaultLogcale = DebugInjectorImpl.getOverrideLocale(this);
-        final List<String> localeValues = Arrays.asList(getResources().getStringArray(R.array.locale_values));
+        String defaultLocale = DebugInjectorImpl.getOverrideLocale(this);
+        final List<String> localeValues = Arrays.asList(getResources()
+                .getStringArray(R.array.locale_values));
 
-        int initialPos = localeValues.indexOf(defaultLogcale);
+        int initialPos = localeValues.indexOf(defaultLocale);
         if (initialPos != -1) {
             spinner.setSelection(initialPos);
         }
@@ -68,7 +69,8 @@ public class DebugSettingsActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                DebugInjectorImpl.setOverrideLocale(DebugSettingsActivity.this, localeValues.get(pos));
+                DebugInjectorImpl.setOverrideLocale(DebugSettingsActivity.this,
+                        localeValues.get(pos));
             }
 
             @Override
@@ -95,6 +97,5 @@ public class DebugSettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
 
 }
