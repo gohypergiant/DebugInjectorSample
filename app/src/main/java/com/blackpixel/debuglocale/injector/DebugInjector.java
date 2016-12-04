@@ -60,7 +60,7 @@ public abstract class DebugInjector {
         return sDebugInjector;
     }
 
-    public abstract void startSettingActivity(Activity activity);
+    public abstract void startSettingsActivity(Activity activity);
 
     public abstract boolean overrideLocale(Activity activity);
 

@@ -45,7 +45,7 @@ public class DebugInjectorImpl extends DebugInjector {
     }
 
     @Override
-    public void startSettingActivity(Activity activity) {
+    public void startSettingsActivity(Activity activity) {
         activity.startActivity(DebugSettingsActivity.newIntent(activity));
     }
 

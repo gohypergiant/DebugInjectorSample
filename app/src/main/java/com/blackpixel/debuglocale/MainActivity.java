@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.setting_debug:
                 if (BuildConfig.DEBUG) {
-                    debugInjector.startSettingActivity(this);
+                    debugInjector.startSettingsActivity(this);
                 }
                 handled = true;
                 break;
