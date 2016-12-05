@@ -16,7 +16,7 @@ change the Android System Language Settings (which is rarely fun).
 * As a project manager I want to ensure debug functionality is not included in release builds
 (security, efficiency)
 * As a hacker, I **SHALL NOT** be able to exercise or reverse engineer
-any of the debug functionality in a release build obtained.
+any of the debug functionality in a release build.
 
 ### DebugInjection Pattern
 The DebugInjection Pattern is just a name for a technique that has been implemented a
