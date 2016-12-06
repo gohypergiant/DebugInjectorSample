@@ -20,7 +20,7 @@
   -->
 
 <resources>
-    <string name="title_activity_debug_settings">DebugSettings</string>
+    <string name="title_activity_debug_settings">Debug Settings</string>
 
     <string-array name="locale_labels">
         <item>Phone Default</item>

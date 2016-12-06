@@ -19,8 +19,8 @@
   ~ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<resources xmlns:app="http://schemas.android.com/apk/res-auto">
-    <string name="app_name">DebugInjectorSample</string>
+<resources>
+    <string name="app_name">DebugInjector Sample</string>
     <string name="hello_world">Hello World!</string>
-    <string name="snackbar_build_type">This is a %s build</string>
+    <string name="snack_bar_build_type">This is a %s build</string>
 </resources>

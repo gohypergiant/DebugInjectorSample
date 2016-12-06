@@ -24,6 +24,13 @@ package com.blackpixel.debuglocale.injector;
 import android.app.Activity;
 import android.content.Context;
 
+/**
+ * Abstract class demonstration the DebugInjector Pattern.
+ *
+ * This class defines the behavior for the debug-only functionality
+ * and provides a convenience method for instantiating the build-type
+ * specific implementation.
+ */
 public abstract class DebugInjector {
 
     private static DebugInjector sDebugInjector;
@@ -31,29 +38,9 @@ public abstract class DebugInjector {
     public static DebugInjector getInstance(Context context) {
 
         if (sDebugInjector == null) {
-
-/*
-             // DebugInjectorPattern #1
-             // use reflection to create DebugInjectorImpl
-             // pros:
-             //   one version of DebugInjectorImpl.java
-             //   easier to "lean on the compiler" when developing
-
-            try {
-                sDebugInjector = (DebugInjector) Class.forName("com.blackpixel.debuglocale.injector.DebugInjectorImpl")
-                        .getConstructor(Context.class).newInstance(context);
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException
-                    | NoSuchMethodException | InvocationTargetException e) {
-                // TODO: error handling
-                e.printStackTrace();
-            }
-*/
-
-            // DebugInjectorPattern #2
-            // place no-op version of DebugInjectorImpl.java in release folder
-            // pros:
-            //   no reflection
-            //   more android-y
+            // There are 2 version of DebugInjectorImpl.java
+            //    debug   - actual implementation
+            //    release - no-op implementation
             sDebugInjector = new DebugInjectorImpl(context);
 
         }

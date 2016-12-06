@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.setting_app:
                 // TODO: add settings activity
                 Snackbar bar = Snackbar.make(findViewById(android.R.id.content),
-                        getResources().getString(R.string.snackbar_build_type,
+                        getResources().getString(R.string.snack_bar_build_type,
                                     BuildConfig.DEBUG ? "Debug" : "Release" ),
                         Snackbar.LENGTH_LONG);
                 bar.show();
