@@ -101,7 +101,14 @@ public class DebugInjectorImpl extends DebugInjector {
 
     private final static String PREFS_DEBUG_SETTINGS = "com.blackpixel.debuglocale.injector.pref_debug_setting";
 
-    private final SharedPreferences sharedPrefs;
+    @VisibleForTesting
+    final static String PREF_DEBUG_LOCALE = "pref_debug_locale";
+
+    @VisibleForTesting
+    SharedPreferences sharedPrefs;
+
+    @VisibleForTesting
+    Locale originalDefaultLocale;
 
     public DebugInjectorImpl(Context context) {
         this.sharedPrefs = context.getSharedPreferences(PREFS_DEBUG_SETTINGS, Context.MODE_PRIVATE);
@@ -115,11 +122,37 @@ public class DebugInjectorImpl extends DebugInjector {
     @Override
     public boolean overrideLocale(Activity activity) {
 
-        boolean override = true;
-        ...
-        ...
+        boolean override = false;
+
+        if (originalDefaultLocale == null) {
+            originalDefaultLocale = Locale.getDefault();
+        }
+
+        Locale currentLocale = Locale.getDefault();
+
+        String localeCode = sharedPrefs.getString(PREF_DEBUG_LOCALE, "");
+
+        boolean isPhoneDefault = localeCode.isEmpty();
+        Locale locale = isPhoneDefault ? originalDefaultLocale : new Locale(localeCode);
+
+        if (!currentLocale.equals(locale)) {
+            setLocale(locale, activity);
+            override = true;
+        }
+
         return override;
     }
+
+    @VisibleForTesting
+    void setLocale(Locale locale, Activity activity) {
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+
+        Locale.setDefault(locale);
+        activity.getResources().updateConfiguration(config, null);
+    }
+
 }
 ```
 
