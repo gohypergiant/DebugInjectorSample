@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.text.TextUtils;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.Locale;
 
@@ -34,11 +34,14 @@ public class DebugInjectorImpl extends DebugInjector {
 
     private final static String PREFS_DEBUG_SETTINGS = "com.blackpixel.debuglocale.injector.pref_debug_setting";
 
-    private final static String PREF_DEBUG_LOCALE = "pref_debug_locale";
+    @VisibleForTesting
+    final static String PREF_DEBUG_LOCALE = "pref_debug_locale";
 
-    private final SharedPreferences sharedPrefs;
+    @VisibleForTesting
+    SharedPreferences sharedPrefs;
 
-    private Locale originalDefaultLocale;
+    @VisibleForTesting
+    Locale originalDefaultLocale;
 
     public DebugInjectorImpl(Context context) {
         this.sharedPrefs = context.getSharedPreferences(PREFS_DEBUG_SETTINGS, Context.MODE_PRIVATE);
@@ -62,23 +65,27 @@ public class DebugInjectorImpl extends DebugInjector {
 
         String localeCode = sharedPrefs.getString(PREF_DEBUG_LOCALE, "");
 
-        boolean isPhoneDefault = TextUtils.isEmpty(localeCode);
+        boolean isPhoneDefault = localeCode.isEmpty();
         Locale locale = isPhoneDefault ? originalDefaultLocale : new Locale(localeCode);
 
         if (!currentLocale.equals(locale)) {
-
-            Resources resources = activity.getResources();
-            Configuration config = resources.getConfiguration();
-            config.setLocale(locale);
-
-            Locale.setDefault(locale);
-            activity.getResources().updateConfiguration(config, null);
-
+            setLocale(locale, activity);
             override = true;
         }
 
         return override;
     }
+
+    @VisibleForTesting
+    void setLocale(Locale locale, Activity activity) {
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+
+        Locale.setDefault(locale);
+        activity.getResources().updateConfiguration(config, null);
+    }
+
 
     static void setOverrideLocale(Context context, String localeCode) {
         SharedPreferences sharedPrefs = context.getSharedPreferences(PREFS_DEBUG_SETTINGS, Context.MODE_PRIVATE);

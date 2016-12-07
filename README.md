@@ -38,7 +38,7 @@ The Locale Hello World app demonstrates this pattern in the `DebugInjector.java`
 abstract class defines all the behavior available to debug builds and provides a static
 creation method to encapsulate instantiation to this file.
 
-**DebugInjector.java**
+**src/main/java/com/blackpixel/debuglocale/injector/DebugInjector.java**
 ```java
 /**
  * Abstract class demonstration the DebugInjector Pattern.
@@ -76,7 +76,7 @@ The implementation is distributed across two `DebugInjectImpl.java` classes prov
 `/debug` and `/relase` folders. The `/release` version provides a simple no-op implementation
 while the `/debug` version does the real work.
 
-**release/DebugInjectorImpl.java**
+**src/release/java/com/blackpixel/debuglocale/injector/DebugInjectorImpl.java**
 ```java
 public class DebugInjectorImpl extends DebugInjector {
 
@@ -84,7 +84,7 @@ public class DebugInjectorImpl extends DebugInjector {
     }
 
     @Override
-    public void startSettingActivity(Activity activity) {
+    public void startSettingsActivity(Activity activity) {
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DebugInjectorImpl extends DebugInjector {
 }
 ```
 
-**debug/DebugInjectorImpl.java**
+**src/debug/java/com/blackpixel/debuglocale/injector/DebugInjectorImpl.java**
 ```java
 public class DebugInjectorImpl extends DebugInjector {
 
@@ -130,7 +130,7 @@ the `/debug` version of the `AndroidManifest.xml` file. This takes advantage of 
 [Manifest Merge](https://developer.android.com/studio/build/manifest-merge.html) capabilities
 which is really cool (but has also gotten me into trouble a couple of times with third-partly libs).
 
-**debug/AndroidManifest.xml**
+**src/debug/AndroidManifest.xml**
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
@@ -152,7 +152,7 @@ The debug functionality is initiated from the `MainActivity.java` class. This cl
 `startSettingsActivity()` is then called to respond to the **Debug Settings** menu click
 and `getOverrideLocale()` is called from the `onResume` override.
 
-**MainActivity.java**
+**src/main/java/com/blackpixel/debuglocale/MainActivity.java**
 ```java
 public class MainActivity extends AppCompatActivity {
 
@@ -215,8 +215,116 @@ public class MainActivity extends AppCompatActivity {
 
 ### Unit Testing
 
-It is important to remember that Android's Unit Test framework also supports folder based
-build variant overrides. This requires any Unit Tests written against the debug version of
- `DebugInjectImpl.java` to be placed under the `testDebug` folder.
+Android's Unit Test framework also supports folder based build variant overrides. This
+requires any Unit Tests written against the debug version of
+ `DebugInjectImpl.java` to be placed under the `/testDebug` folder.
+
+**src/testDebug/java/com/blackpixel/debuglocale/injector/DebugInjectorImplTest.java**
+```java
+/**
+ * Verify actual behavior from debug build type.
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class DebugInjectorImplTest {
+
+    @Mock
+    Context mockContext;
+
+    private DebugInjectorImpl debugInjector;
+
+    @Before
+    public void setUp() {
+        debugInjector = spy(new DebugInjectorImpl(mockContext));
+        debugInjector.sharedPrefs = mock(SharedPreferences.class);
+
+        // is there a better way to override this internal method?
+        doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation) {
+                return null;
+            }
+        }).when(debugInjector).setLocale(any(Locale.class), any(Activity.class));
+    }
+
+    @Test
+    public void startSettingsActivity() throws Exception {
+        Activity activity = mock(Activity.class);
+        debugInjector.startSettingsActivity(activity);
+
+        verify(activity).startActivity(any(Intent.class));
+    }
+
+    @Test
+    public void overrideLocaleInitialDefault() throws Exception {
+        Activity activity = mock(Activity.class);
+        debugInjector.originalDefaultLocale = null;
+
+        when(debugInjector.sharedPrefs.getString(eq(DebugInjectorImpl.PREF_DEBUG_LOCALE), anyString()))
+            .thenReturn("");
+
+        assertFalse(debugInjector.overrideLocale(activity));
+
+        verify(debugInjector, never()).setLocale(any(Locale.class), any(Activity.class));
+        assertEquals(Locale.getDefault(), debugInjector.originalDefaultLocale);
+    }
+
+    @Test
+    public void overrideLocaleInitialChange() throws Exception {
+        Activity activity = mock(Activity.class);
+
+        String originalLanguage = "en";
+        String newLanguage = "fr";
+        debugInjector.originalDefaultLocale = new Locale(originalLanguage);
+
+        when(debugInjector.sharedPrefs.getString(eq(DebugInjectorImpl.PREF_DEBUG_LOCALE), anyString()))
+                .thenReturn(newLanguage);
+
+        assertTrue(debugInjector.overrideLocale(activity));
+
+        ArgumentCaptor<Locale> captor = ArgumentCaptor.forClass(Locale.class);
+
+        verify(debugInjector).setLocale(captor.capture(), any(Activity.class));
+        assertEquals(newLanguage, captor.getValue().getLanguage());
+        assertEquals(originalLanguage, debugInjector.originalDefaultLocale.getLanguage());
+    }
+
+}
+```
+**src/testRelease/java/com/blackpixel/debuglocale/injector/DebugInjectorImplTest.java**
+```java
+/**
+ * Verify No-op behavior from release build type.
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class DebugInjectorImplTest {
+
+    @Mock
+    Context mockContext;
+
+    DebugInjectorImpl debugInjector;
+
+    @Before
+    public void setUp() {
+        debugInjector = spy(new DebugInjectorImpl(mockContext));
+    }
+
+    @Test
+    public void startSettingsActivity() throws Exception {
+        Activity activity = mock(Activity.class);
+        debugInjector.startSettingsActivity(activity);
+        verify(debugInjector).startSettingsActivity(any(Activity.class));
+        verifyZeroInteractions(activity);
+        verifyZeroInteractions(debugInjector);
+    }
+
+    @Test
+    public void overrideLocaleInitialDefault() throws Exception {
+        Activity activity = mock(Activity.class);
+        assertFalse(debugInjector.overrideLocale(activity));
+        verify(debugInjector).overrideLocale(any(Activity.class));
+        verifyZeroInteractions(activity);
+        verifyZeroInteractions(debugInjector);
+    }
+}
+```
 
 
