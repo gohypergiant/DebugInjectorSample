@@ -312,8 +312,8 @@ public class DebugInjectorImplTest {
         Activity activity = mock(Activity.class);
         debugInjector.startSettingsActivity(activity);
         verify(debugInjector).startSettingsActivity(any(Activity.class));
+        verifyNoMoreInteractions(debugInjector);
         verifyZeroInteractions(activity);
-        verifyZeroInteractions(debugInjector);
     }
 
     @Test
@@ -321,8 +321,8 @@ public class DebugInjectorImplTest {
         Activity activity = mock(Activity.class);
         assertFalse(debugInjector.overrideLocale(activity));
         verify(debugInjector).overrideLocale(any(Activity.class));
+        verifyNoMoreInteractions(debugInjector);
         verifyZeroInteractions(activity);
-        verifyZeroInteractions(debugInjector);
     }
 }
 ```

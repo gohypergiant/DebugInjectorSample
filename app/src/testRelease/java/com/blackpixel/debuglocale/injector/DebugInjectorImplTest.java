@@ -35,6 +35,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
@@ -58,8 +59,8 @@ public class DebugInjectorImplTest {
         Activity activity = mock(Activity.class);
         debugInjector.startSettingsActivity(activity);
         verify(debugInjector).startSettingsActivity(any(Activity.class));
+        verifyNoMoreInteractions(debugInjector);
         verifyZeroInteractions(activity);
-        verifyZeroInteractions(debugInjector);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class DebugInjectorImplTest {
         Activity activity = mock(Activity.class);
         assertFalse(debugInjector.overrideLocale(activity));
         verify(debugInjector).overrideLocale(any(Activity.class));
+        verifyNoMoreInteractions(debugInjector);
         verifyZeroInteractions(activity);
-        verifyZeroInteractions(debugInjector);
     }
 }
