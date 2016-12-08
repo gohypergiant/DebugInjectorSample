@@ -164,7 +164,7 @@ which is really cool but has also gotten me into trouble a couple of times with 
 
 The debug functionality is initiated from the `MainActivity.java` class. This class calls the
 `DebugInejctor.getInstance()` method and assigns the result to a method variable. The
-`startSettingsActivity()` is then called to respond to the **Debug Settings** menu click, and `getOverrideLocale()` is called from the `onResume` override.
+`startSettingsActivity()` is then called to respond to the **Debug Settings** menu click, and `overrideLocale()` is called from the `onResume` override.
 
 **src/main/java/com/blackpixel/debuglocale/MainActivity.java**
 ```java
